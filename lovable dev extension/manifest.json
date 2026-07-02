@@ -1,0 +1,103 @@
+{
+  "manifest_version": 3,
+  "name": "lovable dev",
+  "version": "1.1.7",
+  "description": "lovable dev - Premium futuristic extension with community access.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "sidePanel",
+    "cookies",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://*.lovable.dev/*",
+    "https://api.lovable.dev/*",
+    "https://lovable.dev/*",
+    "https://lovable-api.com/*",
+    "https://lov.powerkits.net/*",
+    "https://*.getitstudio.com/*"
+  ],
+  "action": {
+    "default_title": "lovable dev",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.lovable.dev/*",
+        "https://lovable.dev/*"
+      ],
+      "js": [
+        "pageHook.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://*.lovable.dev/*",
+        "https://lovable.dev/*",
+        "https://api.lovable.dev/*"
+      ],
+      "js": [
+        "security-hardening.js",
+        "extension-config.js",
+        "lovable-auth.js",
+        "lovable-feature-api.js",
+        "user-messages.js",
+        "jszip.min.js",
+        "hwFingerprint.js",
+        "content-bridge.js",
+        "sounds.js",
+        "content-templates.js",
+        "content.js"
+      ],
+      "css": [
+        "theme.css",
+        "floating.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "security-hardening.js",
+        "pageHook.js",
+        "sounds/error-payment.mp3",
+        "sounds/error-ratelimit.mp3",
+        "sounds/error-token.mp3",
+        "assets/logo-master-lovable.png",
+        "assets/logo-master-lovable-square.png",
+        "assets/icon16.png",
+        "assets/icon32.png",
+        "assets/icon48.png",
+        "assets/icon128.png"
+      ],
+      "matches": [
+        "https://*.lovable.dev/*",
+        "https://lovable.dev/*"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}

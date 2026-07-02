@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lovable Dev - Admin Licensing Panel</title>
+  <!-- Load Inter font for Adobe-like modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Adobe Creative Suite Slate/Graphite Palette */
+      --adobe-bg: #141414;
+      --adobe-surface: #1e1e1e;
+      --adobe-panel: #2a2a2a;
+      --adobe-hover: #323232;
+      --adobe-border: #3c3c3c;
+      --adobe-text-primary: #e6e6e6;
+      --adobe-text-secondary: #b3b3b3;
+      --adobe-text-muted: #707070;
+      
+      /* Adobe Accent Colors */
+      --adobe-blue: #1473e6;
+      --adobe-blue-hover: #0d66d4;
+      --adobe-blue-light: rgba(20, 115, 230, 0.15);
+      --adobe-green: #26b170;
+      --adobe-green-light: rgba(38, 177, 112, 0.15);
+      --adobe-orange: #e68a00;
+      --adobe-orange-light: rgba(230, 138, 0, 0.15);
+      --adobe-red: #d7373f;
+      --adobe-red-light: rgba(215, 55, 63, 0.15);
+
+      --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --radius-sm: 4px;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-stack);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--adobe-bg);
+      color: var(--adobe-text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--adobe-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--adobe-border);
+      border-radius: 99px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--adobe-text-muted);
+    }
+
+    /* === LOGIN SCREEN === */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background-color: var(--adobe-bg);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: opacity 0.4s ease, visibility 0.4s;
+    }
+
+    .login-card {
+      background-color: var(--adobe-surface);
+      border: 1px solid var(--adobe-border);
+      border-radius: var(--radius-lg);
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      animation: card-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes card-pop {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .login-logo {
+      width: 54px;
+      height: 54px;
+      background: linear-gradient(135deg, var(--adobe-blue), #9d4edd);
+      color: white;
+      font-weight: 800;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      margin: 0 auto 16px;
+      box-shadow: 0 0 20px rgba(20, 115, 230, 0.4);
+    }
+
+    .login-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .login-subtitle {
+      font-size: 13px;
+      color: var(--adobe-text-secondary);
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--adobe-text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper input, .input-wrapper select {
+      width: 100%;
+      background-color: var(--adobe-panel);
+      border: 1px solid var(--adobe-border);
+      border-radius: var(--radius-md);
+      color: var(--adobe-text-primary);
+      padding: 12px 16px;
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .input-wrapper input:focus, .input-wrapper select:focus {
+      border-color: var(--adobe-blue);
+      background-color: var(--adobe-hover);
+      box-shadow: 0 0 0 3px rgba(20, 115, 230, 0.25);
+    }
+
+    .login-btn {
+      width: 100%;
+      background-color: var(--adobe-blue);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      background-color: var(--adobe-blue-hover);
+      transform: translateY(-1px);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    /* === DASHBOARD APP LAYOUT === */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease;
+    }
+
+    header {
+      background-color: var(--adobe-surface);
+      border-bottom: 1px solid var(--adobe-border);
+      padding: 15px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--adobe-blue), #9d4edd);
+      color: white;
+      font-weight: 800;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: 1px solid var(--adobe-border);
+      border-radius: var(--radius-md);
+      color: var(--adobe-text-secondary);
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .logout-btn:hover {
+      background-color: var(--adobe-hover);
+      color: var(--adobe-text-primary);
+      border-color: var(--adobe-text-muted);
+    }
+
+    /* Mobile Floating Viewports */
+    main {
+      flex: 1;
+      padding: 24px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Stats Cards Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      background-color: var(--adobe-surface);
+      border: 1px solid var(--adobe-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      left: 16px;
+      bottom: 0;
+      right: 16px;
+      height: 2px;
+      background: var(--adobe-border);
+      border-radius: 99px;
+    }
+
+    .stat-card.active::after { background: var(--adobe-green); }
+    .stat-card.pending::after { background: var(--adobe-orange); }
+    .stat-card.suspended::after { background: var(--adobe-red); }
+
+    .stat-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--adobe-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--adobe-text-primary);
+    }
+
+    /* Dashboard Panels */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      background-color: var(--adobe-surface);
+      border: 1px solid var(--adobe-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid var(--adobe-border);
+      padding-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Custom Form styling */
+    .panel form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Search and Filters Block */
+    .filter-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+    }
+
+    .search-box input {
+      width: 100%;
+      background-color: var(--adobe-panel);
+      border: 1px solid var(--adobe-border);
+      border-radius: var(--radius-md);
+      color: var(--adobe-text-primary);
+      padding: 10px 14px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: var(--adobe-blue);
+    }
+
+    .filter-tags {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .filter-tag {
+      background-color: var(--adobe-panel);
+      border: 1px solid var(--adobe-border);
+      border-radius: 99px;
+      color: var(--adobe-text-secondary);
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .filter-tag:hover {
+      background-color: var(--adobe-hover);
+      color: var(--adobe-text-primary);
+    }
+
+    .filter-tag.active {
+      background-color: var(--adobe-blue-light);
+      border-color: var(--adobe-blue);
+      color: var(--adobe-blue);
+    }
+
+    /* Subscriptions List / Cards */
+    .keys-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .key-card {
+      background-color: var(--adobe-panel);
+      border: 1px solid var(--adobe-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: var(--transition);
+    }
+
+    .key-card:hover {
+      border-color: var(--adobe-text-muted);
+      transform: translateY(-2px);
+    }
+
+    .key-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .key-string-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .key-string {
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--adobe-text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    .badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-active { background-color: var(--adobe-green-light); color: var(--adobe-green); }
+    .badge-unactivated { background-color: var(--adobe-orange-light); color: var(--adobe-orange); }
+    .badge-expired { background-color: var(--adobe-red-light); color: var(--adobe-red); }
+    .badge-suspended { background-color: rgba(255, 255, 255, 0.08); color: var(--adobe-text-secondary); }
+
+    .key-card-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--adobe-text-secondary);
+      border-top: 1px solid var(--adobe-border);
+      padding-top: 12px;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--adobe-text-muted);
+      font-size: 9px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .key-card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      border-top: 1px solid var(--adobe-border);
+      padding-top: 12px;
+    }
+
+    .btn-action {
+      background-color: transparent;
+      border: 1px solid var(--adobe-border);
+      border-radius: var(--radius-sm);
+      color: var(--adobe-text-primary);
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-action:hover {
+      background-color: var(--adobe-hover);
+    }
+
+    .btn-action.suspend {
+      border-color: var(--adobe-red);
+      color: var(--adobe-red);
+    }
+    .btn-action.suspend:hover {
+      background-color: var(--adobe-red-light);
+    }
+
+    .btn-action.reactivate {
+      border-color: var(--adobe-green);
+      color: var(--adobe-green);
+    }
+    .btn-action.reactivate:hover {
+      background-color: var(--adobe-green-light);
+    }
+
+    .btn-icon-only {
+      background: transparent;
+      border: none;
+      color: var(--adobe-blue);
+      cursor: pointer;
+      padding: 4px;
+      font-size: 13px;
+      border-radius: 4px;
+    }
+
+    .btn-icon-only:hover {
+      background-color: var(--adobe-hover);
+    }
+
+    /* === TOAST ALERTS === */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background-color: var(--adobe-surface);
+      border-left: 4px solid var(--adobe-blue);
+      border: 1px solid var(--adobe-border);
+      border-left-width: 4px;
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      width: 320px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      animation: toast-in 0.3s ease;
+    }
+
+    @keyframes toast-in {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .toast.success { border-left-color: var(--adobe-green); }
+    .toast.error { border-left-color: var(--adobe-red); }
+
+    .toast-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .toast-desc {
+      font-size: 11px;
+      color: var(--adobe-text-secondary);
+    }
+
+    /* === MOBILE FOCUS OPTIMIZATIONS === */
+    @media (max-width: 768px) {
+      body {
+        background-color: var(--adobe-bg);
+      }
+
+      main {
+        padding: 16px;
+        gap: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .stat-value {
+        font-size: 22px;
+      }
+
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      /* Make generated keys easy to copy on touch devices */
+      .key-string {
+        font-size: 13px;
+      }
+
+      /* Better buttons for touch */
+      .btn-action, .login-btn {
+        padding: 10px 16px;
+      }
+
+      .toast-container {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+      }
+      .toast {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔐 LOGIN SCREEN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">L</div>
+      <h2 class="login-title">Sign In</h2>
+      <p class="login-subtitle">Connect to Lovable Dev Admin licensing panel</p>
+      
+      <div class="input-group">
+        <label for="usernameInput">Username</label>
+        <div class="input-wrapper">
+          <input type="text" id="usernameInput" placeholder="admin" value="admin" autocomplete="username">
+        </div>
+      </div>
+      
+      <div class="input-group">
+        <label for="passwordInput">Admin Secret Key</label>
+        <div class="input-wrapper">
+          <input type="password" id="passwordInput" placeholder="Enter secret key..." autocomplete="current-password">
+        </div>
+      </div>
+
+      <button class="login-btn" onclick="attemptLogin()">Connect Dashboard</button>
+    </div>
+  </div>
+
+  <!-- 💻 MAIN APP LAYOUT -->
+  <div class="app-container" id="appContainer">
+    <header>
+      <div class="brand-section">
+        <div class="brand-icon">L</div>
+        <span class="brand-title">Lovable Admin Portal</span>
+      </div>
+      <div class="header-actions">
+        <button class="logout-btn" onclick="logout()">Sign Out</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Stats Count row -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">Total Keys</div>
+          <div class="stat-value" id="totalKeys">0</div>
+        </div>
+        <div class="stat-card active">
+          <div class="stat-title">Active</div>
+          <div class="stat-value" id="activeKeys" style="color: var(--adobe-green);">0</div>
+        </div>
+        <div class="stat-card pending">
+          <div class="stat-title">Pending</div>
+          <div class="stat-value" id="pendingKeys" style="color: var(--adobe-orange);">0</div>
+        </div>
+        <div class="stat-card suspended">
+          <div class="stat-title">Suspended</div>
+          <div class="stat-value" id="inactiveKeys" style="color: var(--adobe-red);">0</div>
+        </div>
+      </div>
+
+      <!-- Main Panels -->
+      <div class="dashboard-layout">
+        <!-- Key Generator Panel -->
+        <div class="panel">
+          <div class="panel-title">🔑 Key Generator</div>
+          <form id="generatorForm">
+            <div class="input-group">
+              <label for="durationType">License Tenure</label>
+              <div class="input-wrapper">
+                <select id="durationType">
+                  <option value="1_hour">1 Hour Trial</option>
+                  <option value="1_week">1 Week Access</option>
+                  <option value="1_month" selected>1 Month Access</option>
+                  <option value="lifetime">Lifetime Access</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="input-group">
+              <label for="keyCount">Quantity</label>
+              <div class="input-wrapper">
+                <input type="number" id="keyCount" value="1" min="1" max="100">
+              </div>
+            </div>
+
+            <button type="submit" class="login-btn" style="margin-top: 0;">Generate License</button>
+          </form>
+        </div>
+
+        <!-- Keys List Panel -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>Subscriptions List</span>
+          </div>
+
+          <!-- Filters & Search -->
+          <div class="filter-bar">
+            <div class="search-box">
+              <input type="text" id="searchBar" placeholder="Search by key string..." oninput="filterLicenses()">
+            </div>
+            <div class="filter-tags">
+              <div class="filter-tag active" data-filter="all" onclick="setFilter('all')">All</div>
+              <div class="filter-tag" data-filter="active" onclick="setFilter('active')">Active</div>
+              <div class="filter-tag" data-filter="unactivated" onclick="setFilter('unactivated')">Pending</div>
+              <div class="filter-tag" data-filter="suspended" onclick="setFilter('suspended')">Suspended</div>
+              <div class="filter-tag" data-filter="expired" onclick="setFilter('expired')">Expired</div>
+            </div>
+          </div>
+
+          <!-- Card List Container -->
+          <div class="keys-container" id="keysList">
+            <p style="text-align: center; color: var(--adobe-text-muted); font-size: 13px; padding: 20px 0;">
+              No license keys loaded.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification Hub -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const API_BASE = window.location.origin;
+    let cachedLicenses = [];
+    let currentFilter = 'all';
+
+    // Auto-load token from localstorage
+    if (localStorage.getItem('admin_secret')) {
+      document.getElementById('passwordInput').value = localStorage.getItem('admin_secret');
+      attemptLogin();
+    }
+
+    function showToast(title, desc, type = 'success') {
+      const hub = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <div class="toast-title">${title}</div>
+        <div class="toast-desc">${desc}</div>
+      `;
+      hub.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    async function attemptLogin() {
+      const username = document.getElementById('usernameInput').value;
+      const secret = document.getElementById('passwordInput').value;
+
+      if (!secret) {
+        showToast('Access Required', 'Please enter your Admin Secret Key.', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/admin/keys`, {
+          method: 'GET',
+          headers: {
+            'x-admin-secret': secret
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Authentication failed');
+        }
+
+        // Auth Successful
+        localStorage.setItem('admin_secret', secret);
+        
+        // Hide login, show dashboard
+        document.getElementById('loginScreen').style.opacity = '0';
+        document.getElementById('loginScreen').style.visibility = 'hidden';
+        
+        const container = document.getElementById('appContainer');
+        container.style.display = 'flex';
+        setTimeout(() => {
+          container.style.opacity = '1';
+          container.style.visibility = 'visible';
+        }, 100);
+
+        cachedLicenses = data.licenses || [];
+        updateDashboard();
+        showToast('Connected', 'Authenticated successfully to license database.');
+
+      } catch (err) {
+        showToast('Login Failed', err.message, 'error');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('admin_secret');
+      document.getElementById('passwordInput').value = '';
+      
+      const container = document.getElementById('appContainer');
+      container.style.opacity = '0';
+      container.style.visibility = 'hidden';
+      
+      setTimeout(() => {
+        container.style.display = 'none';
+        const login = document.getElementById('loginScreen');
+        login.style.visibility = 'visible';
+        login.style.opacity = '1';
+      }, 400);
+
+      showToast('Signed Out', 'You have been disconnected.');
+    }
+
+    async function makeRequest(endpoint, method = 'POST', body = null) {
+      const secret = localStorage.getItem('admin_secret');
+      const options = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-secret': secret
+        }
+      };
+      if (body) options.body = JSON.stringify(body);
+
+      try {
+        const response = await fetch(`${API_BASE}${endpoint}`, options);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Request failed');
+        return data;
+      } catch (err) {
+        showToast('Action Failed', err.message, 'error');
+        throw err;
+      }
+    }
+
+    async function loadLicensesSilent() {
+      const secret = localStorage.getItem('admin_secret');
+      try {
+        const response = await fetch(`${API_BASE}/api/admin/keys`, {
+          method: 'GET',
+          headers: { 'x-admin-secret': secret }
+        });
+        const data = await response.json();
+        if (response.ok) {
+          cachedLicenses = data.licenses || [];
+          updateDashboard();
+        }
+      } catch (e) {
+        console.error('Quiet reload failed');
+      }
+    }
+
+    function updateDashboard() {
+      // Update counters
+      document.getElementById('totalKeys').textContent = cachedLicenses.length;
+      document.getElementById('activeKeys').textContent = cachedLicenses.filter(l => l.status === 'active').length;
+      document.getElementById('pendingKeys').textContent = cachedLicenses.filter(l => l.status === 'unactivated').length;
+      document.getElementById('inactiveKeys').textContent = cachedLicenses.filter(l => l.status === 'suspended').length;
+
+      filterLicenses();
+    }
+
+    function setFilter(filterType) {
+      currentFilter = filterType;
+      
+      // Update active tab UI
+      document.querySelectorAll('.filter-tag').forEach(tag => {
+        if (tag.getAttribute('data-filter') === filterType) {
+          tag.classList.add('active');
+        } else {
+          tag.classList.remove('active');
+        }
+      });
+
+      filterLicenses();
+    }
+
+    function filterLicenses() {
+      const searchQuery = document.getElementById('searchBar').value.toLowerCase().trim();
+      const listContainer = document.getElementById('keysList');
+      listContainer.innerHTML = '';
+
+      let filtered = [...cachedLicenses];
+
+      // Sort: Newest first
+      filtered.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+      // Apply status filter
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter(l => l.status === currentFilter);
+      }
+
+      // Apply search query
+      if (searchQuery) {
+        filtered = filtered.filter(l => l.license_key.toLowerCase().includes(searchQuery));
+      }
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = `
+          <p style="text-align: center; color: var(--adobe-text-muted); font-size: 13px; padding: 30px 0;">
+            No subscriptions matching the filter.
+          </p>
+        `;
+        return;
+      }
+
+      filtered.forEach(lic => {
+        const card = document.createElement('div');
+        card.className = 'key-card';
+
+        const expiryDate = lic.expires_at ? new Date(lic.expires_at).toLocaleString() : 'Never';
+        const activatedDate = lic.activated_at ? new Date(lic.activated_at).toLocaleString() : 'Not activated';
+        const durationText = lic.duration_type.replace('_', ' ');
+
+        let actionBtn = '';
+        if (lic.status === 'active' || lic.status === 'unactivated') {
+          actionBtn = `<button class="btn-action suspend" onclick="suspendKey('${lic.license_key}')">Suspend</button>`;
+        } else if (lic.status === 'suspended') {
+          actionBtn = `<button class="btn-action reactivate" onclick="reactivateKey('${lic.license_key}')">Reactivate</button>`;
+        }
+
+        card.innerHTML = `
+          <div class="key-card-header">
+            <div class="key-string-wrapper">
+              <span class="key-string">${lic.license_key}</span>
+              <button class="btn-icon-only" onclick="copyKey('${lic.license_key}', this)" title="Copy Key">📋</button>
+            </div>
+            <span class="badge badge-${lic.status}">${lic.status}</span>
+          </div>
+          <div class="key-card-details">
+            <div class="detail-item">
+              <span>Duration</span>
+              <div style="text-transform: capitalize;">${durationText}</div>
+            </div>
+            <div class="detail-item">
+              <span>Expiry</span>
+              <div>${expiryDate}</div>
+            </div>
+            <div class="detail-item">
+              <span>Activated On</span>
+              <div>${activatedDate}</div>
+            </div>
+            <div class="detail-item">
+              <span>Device ID</span>
+              <div style="font-family: monospace; font-size: 10px; word-break: break-all;" title="${lic.device_id || 'None'}">${lic.device_id ? lic.device_id.substring(0, 14) + '...' : 'None'}</div>
+            </div>
+          </div>
+          ${actionBtn ? `<div class="key-card-actions">${actionBtn}</div>` : ''}
+        `;
+
+        listContainer.appendChild(card);
+      });
+    }
+
+    function copyKey(key, btn) {
+      navigator.clipboard.writeText(key);
+      const originalText = btn.textContent;
+      btn.textContent = '✓';
+      showToast('Copied', 'License key copied to clipboard.');
+      setTimeout(() => { btn.textContent = originalText; }, 1500);
+    }
+
+    async function suspendKey(key) {
+      if (!confirm(`Suspend key ${key}? This will immediately log the user out.`)) return;
+      try {
+        const res = await makeRequest('/api/admin/suspend-key', 'POST', { license_key: key });
+        if (res.success) {
+          showToast('Suspended', `License ${key} has been disabled.`);
+          loadLicensesSilent();
+        }
+      } catch(e) {}
+    }
+
+    async function reactivateKey(key) {
+      try {
+        const res = await makeRequest('/api/admin/reactivate-key', 'POST', { license_key: key });
+        if (res.success) {
+          showToast('Reactivated', `License ${key} is ready for activation.`);
+          loadLicensesSilent();
+        }
+      } catch(e) {}
+    }
+
+    // Generator Form Submit
+    document.getElementById('generatorForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const duration_type = document.getElementById('durationType').value;
+      const count = document.getElementById('keyCount').value;
+
+      try {
+        const res = await makeRequest('/api/admin/generate-keys', 'POST', { duration_type, count });
+        if (res.success) {
+          showToast('Generated', `Successfully generated ${res.count} license key(s).`);
+          loadLicensesSilent();
+        }
+      } catch(e) {}
+    });
+  </script>
+</body>
+</html>
