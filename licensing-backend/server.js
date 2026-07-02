@@ -164,6 +164,12 @@ app.post('/index.php', async (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
+// Explicit root route — serves admin panel HTML
+// (fallback in case express.static doesn't resolve in serverless)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Licensing Server running at http://localhost:${PORT}`);
