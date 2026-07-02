@@ -28,7 +28,7 @@
 
   // 🌐 PRODUCTION SERVER DEPLOYMENT CONFIGURATION
   // Change this to your live Render/Railway URL when you deploy (e.g. 'https://my-licensing-app.onrender.com')
-  var PRODUCTION_API_URL = ''; 
+  var PRODUCTION_API_URL = 'https://lovable-dev-extension.vercel.app'; 
 
   var finalApiBase = PRODUCTION_API_URL ? PRODUCTION_API_URL.replace(/\/$/, '') : _e.b;
 
