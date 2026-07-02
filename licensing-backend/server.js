@@ -124,6 +124,7 @@ app.post('/index.php', async (req, res) => {
         session_id: crypto.randomUUID(),
         user_name: `User-${license_key.substring(4, 8)}`,
         expiry: result.license.expires_at,
+        expires_at: result.license.expires_at,
         status: result.license.status,
         duration_type: result.license.duration_type,
         activated_at: result.license.activated_at,
@@ -153,6 +154,7 @@ app.post('/index.php', async (req, res) => {
         status: check.license.status,
         duration_type: check.license.duration_type,
         expiry: check.license.expires_at,
+        expires_at: check.license.expires_at,
         message: 'Active license'
       });
     } catch (err) {
