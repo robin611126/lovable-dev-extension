@@ -14,7 +14,7 @@
   const PROXY_CMD_URL = (typeof window !== "undefined" && window.PROXY_COMMAND_URL)
     || (API_BASE + "/functions/v1/proxy-command");
 
-  const VALIDATE_URL = "http://localhost:3000/index.php?route=api/activate";
+  const VALIDATE_URL = API_BASE + "/index.php?route=api/activate";
   const OPTIMIZE_URL = API_BASE + "/functions/v1/optimize-prompt";
   const NOTIFICATIONS_URL = API_BASE + "/rest/v1/notifications?select=*&order=created_at.desc&limit=20";
   const PACKAGES_URL = API_BASE + "/rest/v1/packages?select=*&is_active=eq.true&order=sort_order.asc";
@@ -1588,7 +1588,7 @@
           console.warn("[SP] Heartbeat stopped: extension context invalidated");
           return;
         }
-        const data = await bgFetch("http://localhost:3000/index.php?route=api/check", { method: "POST", headers: apiHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ license_key: key, session_id: sessionId, heartbeat: true, device_id: deviceId }) });
+        const data = await bgFetch(API_BASE + "/index.php?route=api/check", { method: "POST", headers: apiHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ license_key: key, session_id: sessionId, heartbeat: true, device_id: deviceId }) });
         if(!data.valid) {
           var decision = typeof pkShouldLockoutFromValidation === "function"
             ? pkShouldLockoutFromValidation(data, spHbConflictCount)
@@ -1912,7 +1912,7 @@
       // If we have a license key, verify it immediately with the backend on startup
       if (res.ql_license_key && res.ql_license_key !== 'BYPASS') {
         try {
-          const checkUrl = "http://localhost:3000/index.php?route=api/check";
+          const checkUrl = API_BASE + "/index.php?route=api/check";
           const data = await bgFetch(checkUrl, {
             method: "POST",
             headers: apiHeaders({ "Content-Type": "application/json" }),

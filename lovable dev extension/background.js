@@ -449,7 +449,7 @@ async function performHeartbeat() {
       return;
     }
 
-    const resp = await fetch("http://localhost:3000/index.php?route=api/check", {
+    const resp = await fetch("https://lovable-dev-extension.vercel.app/index.php?route=api/check", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
