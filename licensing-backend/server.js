@@ -164,6 +164,10 @@ app.post('/index.php', async (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Licensing Server running at http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Licensing Server running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
