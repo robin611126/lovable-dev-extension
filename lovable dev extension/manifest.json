@@ -18,7 +18,8 @@
     "https://lovable.dev/*",
     "https://lovable-api.com/*",
     "https://lov.powerkits.net/*",
-    "https://*.getitstudio.com/*"
+    "https://*.getitstudio.com/*",
+    "https://lovable-dev-extension.vercel.app/*"
   ],
   "action": {
     "default_title": "lovable dev",
