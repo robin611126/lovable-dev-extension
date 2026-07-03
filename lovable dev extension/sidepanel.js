@@ -1261,20 +1261,25 @@
       ? await pkLicenseUploadHeaders()
       : {};
 
-    await new Promise(function(resolve, reject) {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', uploadUrl, true);
-      xhr.setRequestHeader('Content-Type', contentType);
-      xhr.setRequestHeader('apikey', API_KEY);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + API_KEY);
-      xhr.setRequestHeader('x-upsert', 'true');
-      if (licenseHdrs['x-license-key']) xhr.setRequestHeader('x-license-key', licenseHdrs['x-license-key']);
-      if (licenseHdrs['x-session-id']) xhr.setRequestHeader('x-session-id', licenseHdrs['x-session-id']);
-      if (licenseHdrs['x-device-id']) xhr.setRequestHeader('x-device-id', licenseHdrs['x-device-id']);
-      xhr.onload = () => xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error('PUT failed: ' + xhr.status));
-      xhr.onerror = () => reject(new Error('Network error'));
-      xhr.send(file);
+    const uploadHeaders = {
+      'Content-Type': contentType,
+      'apikey': API_KEY,
+      'Authorization': 'Bearer ' + API_KEY,
+      'x-upsert': 'true'
+    };
+    if (licenseHdrs['x-license-key']) uploadHeaders['x-license-key'] = licenseHdrs['x-license-key'];
+    if (licenseHdrs['x-session-id']) uploadHeaders['x-session-id'] = licenseHdrs['x-session-id'];
+    if (licenseHdrs['x-device-id']) uploadHeaders['x-device-id'] = licenseHdrs['x-device-id'];
+
+    const uploadResp = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: uploadHeaders,
+      body: file
     });
+    if (!uploadResp.ok) {
+      const errBody = await uploadResp.text().catch(() => '');
+      throw new Error('Upload failed: HTTP ' + uploadResp.status + (errBody ? ' - ' + errBody.slice(0, 200) : ''));
+    }
 
     return { file_id: objectKey, file_name: file.name || 'file', public_url: API_BASE + '/storage/v1/object/public/prompt-images/' + objectKey };
   }
