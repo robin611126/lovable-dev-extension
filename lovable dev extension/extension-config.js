@@ -26,21 +26,22 @@
     } catch(e) {}
   }
 
-  // 🌐 PRODUCTION SERVER DEPLOYMENT CONFIGURATION
-  // Change this to your live Render/Railway URL when you deploy (e.g. 'https://my-licensing-app.onrender.com')
-  var PRODUCTION_API_URL = 'https://lovable-dev-extension.vercel.app'; 
+  // 🌐 PRODUCTION LICENSING SERVER CONFIGURATION
+  // Point this to your live Vercel licensing backend deployment
+  var PRODUCTION_LICENSING_URL = 'https://lovable-dev-extension.vercel.app'; 
 
-  var finalApiBase = PRODUCTION_API_URL ? PRODUCTION_API_URL.replace(/\/$/, '') : _e.b;
+  var finalLicensingBase = PRODUCTION_LICENSING_URL ? PRODUCTION_LICENSING_URL.replace(/\/$/, '') : 'http://localhost:3000';
 
   _f('EXTENSION_NAME', 'lovable dev');
   _f('EXTENSION_VERSION', '1.1.7');
   _f('DEFAULT_LICENSE_USER_NAME', 'lovable dev User');
-  _f('POWERKITS_API_BASE', finalApiBase);
+  _f('POWERKITS_API_BASE', _e.b);
   _f('POWERKITS_API_KEY', _e.k);
-  _f('GRINGOW_API_BASE', finalApiBase);
+  _f('GRINGOW_API_BASE', _e.b);
   _f('GRINGOW_API_KEY', _e.k);
   _f('DISCORD_SUPPORT_URL', 'https://wa.me/918469279409');
-  _f('PROXY_COMMAND_URL', finalApiBase + '/functions/v1/proxy-command');
+  _f('PROXY_COMMAND_URL', _e.b + '/functions/v1/proxy-command');
+  _f('LICENSING_API_BASE', finalLicensingBase);
   _f('SEND_STRATEGY', 'native');
   _f('POWERKITS_DEBUG', false);
   _f('INTERNAL_LICENSE_MODE', false);
@@ -61,6 +62,7 @@
       window._pkS.lock('INTERNAL_LICENSE_MODE', INTERNAL_LICENSE_MODE);
       window._pkS.lock('DEFAULT_LICENSE_USER_NAME', DEFAULT_LICENSE_USER_NAME);
       window._pkS.lock('PROXY_COMMAND_URL', PROXY_COMMAND_URL);
+      window._pkS.lock('LICENSING_API_BASE', LICENSING_API_BASE);
     }
   } catch(e) {}
 })();
