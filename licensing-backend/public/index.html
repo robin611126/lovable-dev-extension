@@ -894,6 +894,14 @@
     }
 
     function updateDashboard() {
+      const now = new Date();
+      // Auto-expire active keys on the frontend for immediate UI feedback
+      cachedLicenses.forEach(l => {
+        if (l.status === 'active' && l.expires_at && new Date(l.expires_at) < now) {
+          l.status = 'expired';
+        }
+      });
+
       // Update counters
       document.getElementById('totalKeys').textContent = cachedLicenses.length;
       document.getElementById('activeKeys').textContent = cachedLicenses.filter(l => l.status === 'active').length;

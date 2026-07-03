@@ -239,6 +239,7 @@ async function updateLicenseStatus(key, newStatus) {
 }
 
 async function getAllLicenses() {
+  const now = new Date();
   if (isSupabase) {
     try {
       const { data, error } = await supabase
@@ -248,13 +249,49 @@ async function getAllLicenses() {
         console.error('Supabase error in getAllLicenses:', error);
         return [];
       }
-      return data || [];
+      
+      const licenses = data || [];
+      const expiredKeys = [];
+      
+      for (const lic of licenses) {
+        if (lic.status === 'active' && lic.expires_at && new Date(lic.expires_at) < now) {
+          lic.status = 'expired';
+          expiredKeys.push(lic.license_key);
+        }
+      }
+      
+      if (expiredKeys.length > 0) {
+        // Bulk update expired keys in Supabase
+        const { error: updateError } = await supabase
+          .from('licenses')
+          .update({ status: 'expired' })
+          .in('license_key', expiredKeys);
+        if (updateError) {
+          console.error('Failed to auto-expire keys in Supabase:', updateError);
+        } else {
+          console.log(`Auto-expired ${expiredKeys.length} license keys in Supabase.`);
+        }
+      }
+      
+      return licenses;
     } catch (e) {
       console.error('Supabase connection error in getAllLicenses:', e);
       return [];
     }
   } else {
-    return readDb().licenses;
+    const dbData = readDb();
+    let updated = false;
+    dbData.licenses.forEach(lic => {
+      if (lic.status === 'active' && lic.expires_at && new Date(lic.expires_at) < now) {
+        lic.status = 'expired';
+        updated = true;
+      }
+    });
+    if (updated) {
+      writeDb(dbData);
+      console.log('Auto-expired keys in local JSON database.');
+    }
+    return dbData.licenses;
   }
 }
 
