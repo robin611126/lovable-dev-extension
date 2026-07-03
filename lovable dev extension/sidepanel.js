@@ -705,7 +705,8 @@
           ql_license_valid: true,
           ql_license_key: key,
           ql_session_id: data.session_id,
-          ql_user_name: userName
+          ql_user_name: userName,
+          ql_device_id: deviceId
         }, typeof pkLicenseStoragePatch === "function" ? pkLicenseStoragePatch(data) : {
           ql_expires_at: data.expires_at || null,
           ql_activated_at: data.activated_at || null,
@@ -1940,7 +1941,8 @@
                 ql_license_valid: true,
                 ql_expires_at: expiresAt,
                 ql_license_status: licenseStatus,
-                ql_duration_type: durationType
+                ql_duration_type: durationType,
+                ql_device_id: deviceId
               }, resolve);
             });
             
