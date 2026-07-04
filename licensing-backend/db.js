@@ -57,12 +57,13 @@ function writeDb(data) {
 }
 
 async function getLicense(key) {
+  const normalizedKey = String(key || '').trim().toUpperCase();
   if (isSupabase) {
     try {
       const { data, error } = await supabase
         .from('licenses')
         .select('*')
-        .eq('license_key', key)
+        .eq('license_key', normalizedKey)
         .maybeSingle();
       if (error) {
         console.error('Supabase error in getLicense:', error);
@@ -75,7 +76,7 @@ async function getLicense(key) {
     }
   } else {
     const db = readDb();
-    return db.licenses.find(l => l.license_key === key);
+    return db.licenses.find(l => l.license_key === normalizedKey);
   }
 }
 
@@ -211,31 +212,32 @@ async function checkLicense(key, deviceId) {
 }
 
 async function updateLicenseStatus(key, newStatus) {
+  const normalizedKey = String(key || '').trim().toUpperCase();
   if (isSupabase) {
-    try {
-      const { data, error } = await supabase
-        .from('licenses')
-        .update({ status: newStatus })
-        .eq('license_key', key)
-        .select()
-        .maybeSingle();
-      if (error) {
-        console.error('Supabase error in updateLicenseStatus:', error);
-        return null;
-      }
-      return data;
-    } catch (e) {
-      console.error('Supabase connection error in updateLicenseStatus:', e);
-      return null;
-    }
-  } else {
-    const db = readDb();
-    const license = db.licenses.find(l => l.license_key === key);
-    if (!license) return null;
-    license.status = newStatus;
-    writeDb(db);
-    return license;
-  }
+     try {
+       const { data, error } = await supabase
+         .from('licenses')
+         .update({ status: newStatus })
+         .eq('license_key', normalizedKey)
+         .select()
+         .maybeSingle();
+       if (error) {
+         console.error('Supabase error in updateLicenseStatus:', error);
+         return null;
+       }
+       return data;
+     } catch (e) {
+       console.error('Supabase connection error in updateLicenseStatus:', e);
+       return null;
+     }
+   } else {
+     const db = readDb();
+     const license = db.licenses.find(l => l.license_key === normalizedKey);
+     if (!license) return null;
+     license.status = newStatus;
+     writeDb(db);
+     return license;
+   }
 }
 
 async function getAllLicenses() {
